@@ -170,3 +170,7 @@ LOGGING = {
         },
     }
 }
+
+MISSION_NAME = "JULO 2.7"
+CALLSIGN = "OM3KEG-11"
+API_KEY = ""
