@@ -1,3 +1,4 @@
+import os
 # Django settings for juloMCC project.
 
 DEBUG = True
@@ -82,8 +83,23 @@ STATICFILES_FINDERS = (
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = 'e1y$7(c6!mpr#c$2e0hf9x5w8yi000xvjaw@9g$5vr-ghy+3h)'
+SETTINGS_DIR = os.path.dirname(os.path.abspath(__file__))
+def generate_secret_key():
+    # taken from Django core/management/commands/startproject.py
+    from django.utils.crypto import get_random_string
+    chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
+    return get_random_string(50, chars)
+
+def create_secret_file(secret_file_name):
+    with open(os.path.join(SETTINGS_DIR, secret_file_name), 'w') as secret_file:
+        secret_file.write("SECRET_KEY = '%s'\n" % generate_secret_key())
+
+# http://stackoverflow.com/questions/4664724/distributing-django-projects-with-unique-secret-keys
+try:
+    from .secret_key import SECRET_KEY
+except ImportError:
+    create_secret_file('secret_key.py')
+    from .secret_key import SECRET_KEY
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
